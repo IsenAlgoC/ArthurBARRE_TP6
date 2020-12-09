@@ -10,7 +10,7 @@
 #define SQUELET
 /**************************************************************************/
 /* Compléter votre nom ici                                                */
-/*   Nom :  Barré                      Prénom : Arthur             */
+/*   Nom :  Berthebaud                       Prénom :               */
 /**************************************************************************/
 
 extern bool modif;
@@ -51,12 +51,11 @@ int ajouter_un_contact_dans_rep(Repertoire* rep, Enregistrement enr)
 	}
 	else {
 		if (InsertElementAt(rep->liste, rep->liste->size, enr) != 0) {
-			rep->nb_elts += 1;
+			rep->nb_elts++;
 			modif = true;
 			rep->est_trie = false;
 			return(OK);
 		}
-
 
 	}
 
@@ -129,15 +128,8 @@ void affichage_enreg(Enregistrement enr)
   /**********************************************************************/
 void affichage_enreg_frmt(Enregistrement enr)
 {
-	printf("| %s", enr.nom);
-	for (int i = strlen(enr.nom); i < MAX_NOM; i++)
-		printf(" ");
-	printf("| %s", enr.prenom);
-	for (int i = strlen(enr.prenom); i < MAX_NOM; i++)
-		printf(" ");
-	printf("| %s", enr.tel);
-	printf("\n");
-
+	printf("\n%s, %s                 %s\n", enr.nom, enr.prenom, enr.tel);
+	return;
 } /* fin affichage_enreg */
 
 
@@ -244,21 +236,17 @@ int rechercher_nom(Repertoire* rep, char nom[], int ind)
 
 #else
 #ifdef IMPL_LIST
-	// ajouter code ici pour Liste
-
-
-
+	// ajouter code ici pour tableau
 	ind_fin = rep->nb_elts;
 	strncpy_s(tmp_nom, _countof(tmp_nom), nom, _TRUNCATE);    //on copie nom dans tmp_nom, et on le passe en majuscule
 	_strupr_s(tmp_nom, strlen(tmp_nom) + 1);
 	while (trouve == false && i < ind_fin) {  //on va comparer a chaque nom du répertoire jusqu'au dernier
 
-		strncpy_s(tmp_nom2, _countof(tmp_nom2), GetElementAt(rep->liste,i)->pers.nom, _TRUNCATE);   //on copie dans tmp_nom2 le nom du répertoire et on le passe en maj
+		strncpy_s(tmp_nom2, _countof(tmp_nom2), GetElementAt(rep->liste, i)->pers.nom, _TRUNCATE);   //on copie dans tmp_nom2 le nom du répertoire et on le passe en maj
 		_strupr_s(tmp_nom2, strlen(tmp_nom2) + 1);
 		if (strcmp(tmp_nom, tmp_nom2) == 0) trouve = true; //comparaison de la chaine de charactere on return true si c'est le même
 		else i++;  //sinon on passe au suivant
 	}
-
 
 #endif
 #endif
@@ -313,15 +301,14 @@ int sauvegarder(Repertoire* rep, char nom_fichier[])
 #else
 #ifdef IMPL_LIST
 	// ajouter code ici pour Liste
-
 	if (fopen_s(&fic_rep, nom_fichier, "w") != 0 || fic_rep == NULL) {   //on vérifie que le fichier est ouvert
 		err = ERROR;
 		return err;
 	}
 	for (int i = 0; i < rep->nb_elts; i++) {      //pour tous les éléments du tableau
-		fprintf(fic_rep, "%s%c", GetElementAt(rep->liste,i)->pers.nom, SEPARATEUR);           //on écrit dans le fichier les info du contact
-		fprintf(fic_rep, "%s%c", GetElementAt(rep->liste,i)->pers.prenom, SEPARATEUR);
-		fprintf(fic_rep, "%s\n", GetElementAt(rep->liste,i)->pers.tel);
+		fprintf(fic_rep, "%s%c", GetElementAt(rep->liste, i)->pers.nom, SEPARATEUR);           //on écrit dans le fichier les info du contact
+		fprintf(fic_rep, "%s%c", GetElementAt(rep->liste, i)->pers.prenom, SEPARATEUR);
+		fprintf(fic_rep, "%s\n", GetElementAt(rep->liste, i)->pers.tel);
 
 	}
 	if (feof(fic_rep)) {
@@ -382,17 +369,23 @@ int charger(Repertoire* rep, char nom_fichier[])
 				}
 #else
 #ifdef IMPL_LIST
-				if (lire_champ_suivant(buffer, &idx, GetElementAt(rep->liste, num_rec)->pers.nom, MAX_NOM, SEPARATEUR) == OK)
+														// ajouter code implemention liste
+				Enregistrement enr;
+				if (lire_champ_suivant(buffer, &idx, enr.nom, MAX_NOM, SEPARATEUR) == OK)
 				{
 					idx++;							/* on saute le separateur */
-					if (lire_champ_suivant(buffer, &idx, GetElementAt(rep->liste, num_rec)->pers.prenom, MAX_NOM, SEPARATEUR) == OK)
+					if (lire_champ_suivant(buffer, &idx, enr.prenom, MAX_NOM, SEPARATEUR) == OK)
 					{
 						idx++;
-						if (lire_champ_suivant(buffer, &idx, GetElementAt(rep->liste, num_rec)->pers.tel, MAX_TEL, SEPARATEUR) == OK)
+						if (lire_champ_suivant(buffer, &idx, enr.tel, MAX_TEL, SEPARATEUR) == OK) {
+
+							InsertElementAt(rep->liste, num_rec, enr);
 							num_rec++;		/* element à priori correct, on le comptabilise */
+						}
+
 					}
 				}
-														// ajouter code implemention liste
+
 #endif
 #endif
 
