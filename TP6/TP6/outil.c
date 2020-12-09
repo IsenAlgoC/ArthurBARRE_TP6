@@ -10,7 +10,7 @@
 #define SQUELET
 /**************************************************************************/
 /* Compléter votre nom ici                                                */
-/*   Nom :  Berthebaud                       Prénom :               */
+/*   Nom : Barré                       Prénom : Arthur            */
 /**************************************************************************/
 
 extern bool modif;
