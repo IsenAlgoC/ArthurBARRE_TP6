@@ -7,8 +7,8 @@
 // #define SQUELET
 
 
-#define IMPL_TAB  // si d�fini, on compile pour une impl�mentation tableau du r�pertoire
-//#define IMPL_LIST // si d�fini, on compile pour un impl�mentation Liste Cha�n�e du r�pertoire
+//#define IMPL_TAB  // si d�fini, on compile pour une impl�mentation tableau du r�pertoire
+#define IMPL_LIST // si d�fini, on compile pour un impl�mentation Liste Cha�n�e du r�pertoire
 
 #ifdef IMPL_LIST
 #undef IMPL_TAB
